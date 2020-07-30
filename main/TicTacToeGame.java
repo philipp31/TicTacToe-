@@ -28,17 +28,17 @@ public class TicTacToeGame {
 		int rechteckHoehe = 500/3;
 		rechtecke = new ArrayList<RechteckElement>();
 		// erste Reihe:
-		rechtecke.add(new RechteckElement(40, 5, rechteckBreite, rechteckHoehe));
-		rechtecke.add(new RechteckElement(40 + 1*rechteckBreite, 5, rechteckBreite, rechteckHoehe));
-		rechtecke.add(new RechteckElement(40 + 2*rechteckBreite, 5, rechteckBreite, rechteckHoehe));
+		rechtecke.add(new RechteckElement(40, 50, rechteckBreite, rechteckHoehe)); // (x,y,Breite,Hoehe)
+		rechtecke.add(new RechteckElement(40 + 1*rechteckBreite, 50, rechteckBreite, rechteckHoehe));
+		rechtecke.add(new RechteckElement(40 + 2*rechteckBreite, 50, rechteckBreite, rechteckHoehe));
 		// zweite Reihe
-		rechtecke.add(new RechteckElement(40, 5 + 1*rechteckHoehe, rechteckBreite, rechteckHoehe));
-		rechtecke.add(new RechteckElement(40 + 1*rechteckBreite, 5 + 1*rechteckHoehe, rechteckBreite, rechteckHoehe));
-		rechtecke.add(new RechteckElement(40 + 2*rechteckBreite, 5 + 1*rechteckHoehe, rechteckBreite, rechteckHoehe));
+		rechtecke.add(new RechteckElement(40, 50 + 1*rechteckHoehe, rechteckBreite, rechteckHoehe));
+		rechtecke.add(new RechteckElement(40 + 1*rechteckBreite, 50 + 1*rechteckHoehe, rechteckBreite, rechteckHoehe));
+		rechtecke.add(new RechteckElement(40 + 2*rechteckBreite, 50 + 1*rechteckHoehe, rechteckBreite, rechteckHoehe));
 		// dritte Reihe:
-		rechtecke.add(new RechteckElement(40, 5 + 2*rechteckHoehe, rechteckBreite, rechteckHoehe));
-		rechtecke.add(new RechteckElement(40 + 1*rechteckBreite, 5 + 2*rechteckHoehe, rechteckBreite, rechteckHoehe));
-		rechtecke.add(new RechteckElement(40 + 2*rechteckBreite, 5 + 2*rechteckHoehe, rechteckBreite, rechteckHoehe));
+		rechtecke.add(new RechteckElement(40, 50 + 2*rechteckHoehe, rechteckBreite, rechteckHoehe));
+		rechtecke.add(new RechteckElement(40 + 1*rechteckBreite, 50 + 2*rechteckHoehe, rechteckBreite, rechteckHoehe));
+		rechtecke.add(new RechteckElement(40 + 2*rechteckBreite, 50 + 2*rechteckHoehe, rechteckBreite, rechteckHoehe));
 
 	}
 	
@@ -58,5 +58,4 @@ public class TicTacToeGame {
 	public ArrayList<RechteckElement> getRecs() {
 		return rechtecke;
 	}
-
 }

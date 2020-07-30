@@ -1,12 +1,16 @@
 package gui;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import main.TicTacToeGame;
 
@@ -16,29 +20,44 @@ public class GamePanel extends JPanel implements MouseListener {
 	private int gameStatus;
 	private int[][] fieldStatus;
 	private int[][] winningLine;
+	private JLabel schriftzug;
 	private RechteckElement[][] rechtecke;
 	private WinningInfo infoPanel;
 
 	public GamePanel() {
+		firstInit();
+		add(schriftzug);
+		setBackground(Color.WHITE);
+		requestFocus();		//Notwendig für Anklickbarkeit
+		addMouseListener(this);	//Gamepanel muss wissen, dass MouseListener fuer ein Objekt dieser Klasse aufgerufen werden sollen->hinzugefuegt	
+	}
+	
+	public void firstInit() {
 		gameStatus = 0;
 		setBounds(10, 10, 500, 500);
 		fieldStatus = new int[3][3];
 		winningLine = new int[3][3];
 		rechtecke = new RechteckElement[3][3];
-		setBackground(Color.WHITE);
-		requestFocus();	// notwendig für Anklickbarkeit
-		addMouseListener(this);	// gamepanel muss wissen, dass MouseListener fuer ein Objekt dieser Klasse aufgerufen werden sollen->hinzugefuegt	
+		schriftzug = new JLabel("Es ist Spieler X dran.", SwingConstants.CENTER);
+		schriftzug.setOpaque(true);		// Sichtbarkeit des BACKROUNDS!
+		schriftzug.setBackground(Color.lightGray);
+		schriftzug.setFont(new java.awt.Font("Arial", Font.ITALIC, 30));
 	}
 	
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		// jetzt eigene Zeichnungen:
-		System.out.println("GamePanel paintComponents");
 		Graphics2D g2d = (Graphics2D) g;
 		for(RechteckElement elmts : TicTacToeGame.obj.getRecs()) {
 			elmts.draw(g2d);
 		}
+		try {
+			schriftzug.setText("Es ist Spieler " + TicTacToeGame.obj.getCurrentPlayer() + " dran.");
+		} catch(NullPointerException a) {
+			
+		}
+	
 	}
 	
 	//***********************************
@@ -49,10 +68,28 @@ public class GamePanel extends JPanel implements MouseListener {
 		showWinningCombination(gameStatus);
 		if(gameStatus == -1) {
 			infoPanel = new WinningInfo("O");
-		} else if(gameStatus == 1) {
+			if(infoPanel.getPlayAgain()) {	// NEUES SPIEL EINSTELLEN:
+				resetGame();
+			}
+		}
+		else if(gameStatus == 1) {
 			infoPanel = new WinningInfo("X");
+			if(infoPanel.getPlayAgain()) {	// NEUES SPIEL EINSTELLEN:
+				resetGame();
+			}
 		}
 	}//*************************************
+	
+	public void resetGame() {
+		for(RechteckElement elmts : TicTacToeGame.obj.getRecs()) {
+			elmts.setValue(FieldValue.EMPTY);
+			elmts.setColor(false);
+		}
+		resetWinningField();
+		resetCacheField();
+		gameStatus = 0;
+		repaint();
+	}
 	
 	private void showWinningCombination(int status) {
 		if(status != 0) {
@@ -144,6 +181,21 @@ public class GamePanel extends JPanel implements MouseListener {
 			return 1;
 		} else resetCacheField();
 		counter = 0;
+		
+		for(int i=0; i<3; i++) {
+			if(condition[i][i] == FieldValue.O) {
+				counter++;
+				fieldStatus[i][i] = 1;
+			}
+		}
+		if(counter > 2) {
+			writeWinningLine();
+			return -1;
+		} else resetCacheField();
+		counter = 0;
+		
+		
+		
 		for(int i=0; i<3; i++) {
 			if(condition[i][2-i] == FieldValue.O) {
 				counter++;
@@ -154,6 +206,18 @@ public class GamePanel extends JPanel implements MouseListener {
 			writeWinningLine();
 			return -1;
 		} else resetCacheField();
+		
+		for(int i=0; i<3; i++) {
+			if(condition[i][2-i] == FieldValue.X) {
+				counter++;
+				fieldStatus[i][2-i] = 1;
+			}
+		}
+		if(counter > 2) {
+			writeWinningLine();
+			return 1;
+		} else resetCacheField();
+		
 		return 0;
 	}
 	
@@ -234,6 +298,14 @@ public class GamePanel extends JPanel implements MouseListener {
 				winningLine[i][k] = fieldStatus[i][k];
 			}
 		}	
+	}
+	
+	private void resetWinningField() {
+		for(int i=0; i<3; i++) {
+			for(int k=0; k<3; k++) {
+				winningLine[i][k] = 0;
+			}
+		}
 	}
 	
 	private void resetCacheField() {

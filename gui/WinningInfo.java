@@ -13,9 +13,11 @@ import javax.swing.SwingConstants;
 
 public class WinningInfo extends JDialog {
 	
-	JButton ok;
-	JLabel schriftzug;
-	String spieler;
+	private JButton ok;
+	private JButton nochmal;
+	private JLabel schriftzug;
+	private String spieler;
+	private Boolean playAgain;
 	
 	public WinningInfo(String info) {
 		super();					// Aufrufen des Konstruktors der Vaterklasse
@@ -26,18 +28,21 @@ public class WinningInfo extends JDialog {
 		setLocationRelativeTo(null);
 		this.setTitle("Spiel vorbei!");
 		initComponents();
-		
+		playAgain = false;
 		// Adding all components:
 		setBackground(Color.GRAY);
 		add(schriftzug,BorderLayout.NORTH);
 		add(ok,BorderLayout.SOUTH);
+		add(nochmal);
 		setModal(true);
 		setVisible(true);
 	}
 	
 	public void initComponents() {
 		ok = new JButton("OK schadé");
+		nochmal = new JButton("Nochmal spielen!");
 		ok.setFont(new java.awt.Font("Arial", Font.ITALIC, 20));
+		nochmal.setFont(new java.awt.Font("Arial", Font.ITALIC, 20));
 		schriftzug = new JLabel("   Spieler " + spieler + " hat gewonnen!", SwingConstants.CENTER);
 		schriftzug.setSize(100, 50);
 		schriftzug.setFont(new java.awt.Font("Arial", Font.ITALIC, 30));
@@ -48,6 +53,23 @@ public class WinningInfo extends JDialog {
             }
 	
 		});
+		
+		nochmal.addActionListener(new ActionListener() {
+			
+            public void actionPerformed(ActionEvent e) {
+            	playAgain = true;
+                dispose();
+            }
+	
+		});
+	}
+
+	public Boolean getPlayAgain() {
+		return playAgain;
+	}
+
+	public void setPlayAgain(Boolean playAgain) {
+		this.playAgain = playAgain;
 	}
 
 }
