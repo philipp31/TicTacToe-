@@ -9,7 +9,6 @@ public class TicTacToeGame {
 	
 	public static TicTacToeGame obj;
 	private FieldValue currentPlayer;
-	
 	private ArrayList<RechteckElement> rechtecke;
 
 	public static void main(String[] args) {
@@ -17,15 +16,15 @@ public class TicTacToeGame {
 	}
 	
 	public TicTacToeGame() {
-		new GameWindow(600,600);
+		new GameWindow(700, 700);
 		initGame();
 	}
 	
 	public void initGame() {
 		currentPlayer = FieldValue.X;	// first player is X
 		
-		int rechteckBreite = 500/3;
-		int rechteckHoehe = 500/3;
+		int rechteckBreite = 600/3;
+		int rechteckHoehe = 600/3;
 		rechtecke = new ArrayList<RechteckElement>();
 		// erste Reihe:
 		rechtecke.add(new RechteckElement(40, 50, rechteckBreite, rechteckHoehe)); // (x,y,Breite,Hoehe)

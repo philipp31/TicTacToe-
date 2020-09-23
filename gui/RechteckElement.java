@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
+@SuppressWarnings("serial")
 public class RechteckElement extends Rectangle {
 	
 	private FieldValue value;
@@ -24,10 +25,10 @@ public class RechteckElement extends Rectangle {
 			g2d.setColor(Color.ORANGE);
 		}
 		if(setColor) {
-			g2d.fillRect(x+5,y+5,width-10,height-10);
+			g2d.fillRect(x+5, y+5, width-10, height-10);
 			g2d.setColor(Color.BLACK);
 		}
-		g2d.drawRect(x,y,width,height); 
+		g2d.drawRect(x, y, width, height); 
 		// Symbole zeichnen:
 		if(value == FieldValue.O) {
 			g2d.drawOval(x+5, y+5, width-10, height-10);

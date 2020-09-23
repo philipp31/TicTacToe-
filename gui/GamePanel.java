@@ -14,7 +14,7 @@ import javax.swing.SwingConstants;
 
 import main.TicTacToeGame;
 
-
+@SuppressWarnings("serial")
 public class GamePanel extends JPanel implements MouseListener {
 	
 	private int gameStatus;
@@ -34,7 +34,7 @@ public class GamePanel extends JPanel implements MouseListener {
 	
 	public void firstInit() {
 		gameStatus = 0;
-		setBounds(10, 10, 500, 500);
+		setBounds(10, 10, 600, 600);
 		fieldStatus = new int[3][3];
 		winningLine = new int[3][3];
 		rechtecke = new RechteckElement[3][3];
@@ -42,6 +42,22 @@ public class GamePanel extends JPanel implements MouseListener {
 		schriftzug.setOpaque(true);		// Sichtbarkeit des BACKROUNDS!
 		schriftzug.setBackground(Color.lightGray);
 		schriftzug.setFont(new java.awt.Font("Arial", Font.ITALIC, 30));
+	}
+	
+	protected void setRechteckArray() {
+		if(rechtecke[0][0] == null) {
+			rechtecke[0][0] = TicTacToeGame.obj.getRecs().get(0);	// Reihe Numero Uno
+			rechtecke[1][0] = TicTacToeGame.obj.getRecs().get(1);
+			rechtecke[2][0] = TicTacToeGame.obj.getRecs().get(2);
+			
+			rechtecke[0][1] = TicTacToeGame.obj.getRecs().get(3);	// Reihe Numero Dos
+			rechtecke[1][1] = TicTacToeGame.obj.getRecs().get(4);
+			rechtecke[2][1] = TicTacToeGame.obj.getRecs().get(5);
+			
+			rechtecke[0][2] = TicTacToeGame.obj.getRecs().get(6);	// Reihe Numero Trés
+			rechtecke[1][2] = TicTacToeGame.obj.getRecs().get(7);
+			rechtecke[2][2] = TicTacToeGame.obj.getRecs().get(8);
+		}
 	}
 	
 	@Override
@@ -60,25 +76,42 @@ public class GamePanel extends JPanel implements MouseListener {
 	
 	}
 	
-	//***********************************
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		checkField(e.getX(),e.getY());	// Position des Klicks übergeben!!
+		checkField(e.getX(), e.getY());	// Position des Klicks übergeben!!
 		gameStatus = checkWin();
 		showWinningCombination(gameStatus);
+		showResetGameWindow(gameStatus); // öffne neues Fenster, wenn einer gewonnen hat oder das Feld voll ist
+	}
+	
+	private void showResetGameWindow(int gameStatus) {
 		if(gameStatus == -1) {
-			infoPanel = new WinningInfo("O");
+			infoPanel = new WinningInfo("O", false);
 			if(infoPanel.getPlayAgain()) {	// NEUES SPIEL EINSTELLEN:
 				resetGame();
 			}
 		}
 		else if(gameStatus == 1) {
-			infoPanel = new WinningInfo("X");
+			infoPanel = new WinningInfo("X", false);
 			if(infoPanel.getPlayAgain()) {	// NEUES SPIEL EINSTELLEN:
 				resetGame();
 			}
+		} else if(isFieldFull()) {
+			infoPanel = new WinningInfo("Das Spielfeld ist voll meine Freunde", true);
+			if(infoPanel.getPlayAgain()) {
+				resetGame();
+			}
 		}
-	}//*************************************
+	}
+	
+	private boolean isFieldFull() {
+		for(RechteckElement rec : TicTacToeGame.obj.getRecs()) {
+			if(rec.getValue() == FieldValue.EMPTY) {
+				return false;
+			}
+		}
+		return true;
+	}
 	
 	public void resetGame() {
 		for(RechteckElement elmts : TicTacToeGame.obj.getRecs()) {
@@ -105,13 +138,11 @@ public class GamePanel extends JPanel implements MouseListener {
 
 	private void checkField(int x, int y) {
 		//Der Pixel wo die Maus hinklickt:
-		Rectangle cursorHitbox =  new Rectangle(x,y,1,1);	
+		Rectangle cursorHitbox =  new Rectangle(x, y, 1, 1);	
 		for(RechteckElement elmts : TicTacToeGame.obj.getRecs()) {
-			
-		// nur wenn keiner der Spieler gewonnen hat soll das weiterspielen ermoeglicht werden:
+		// nur wenn keiner der Spieler gewonnen hat, soll das weiterspielen ermoeglicht werden:
 			if(gameStatus == 0) {
-				
-			//Abfrage ob Pixel wo hingeklickt wurde sich mit einem Rechteck überschneidet:
+			//Abfrage ob Pixel, wo hingeklickt wurde sich mit einem Rechteck überschneidet:
 				if(cursorHitbox.intersects(elmts)) {
 					if(elmts.getValue() == FieldValue.EMPTY) {
 						elmts.setValue(TicTacToeGame.obj.getCurrentPlayer());
@@ -126,8 +157,7 @@ public class GamePanel extends JPanel implements MouseListener {
 
 	private int checkWin() {
 		FieldValue[][] condition = new FieldValue[3][3];
-		fillingStructure(condition);
-		
+		getCurrentValues(condition);
 		int rowStatus = checkRows(condition);
 		int columnStatus = checkColumns(condition);
 		int crosswiseStatus = checkCrosswise(condition);
@@ -140,18 +170,8 @@ public class GamePanel extends JPanel implements MouseListener {
 		return returnValue;
 	}
 	
-	public void fillingStructure(FieldValue[][] condition) {
-		rechtecke[0][0] = TicTacToeGame.obj.getRecs().get(0);	// Reihe Numero Uno
-		rechtecke[1][0] = TicTacToeGame.obj.getRecs().get(1);
-		rechtecke[2][0] = TicTacToeGame.obj.getRecs().get(2);
-		
-		rechtecke[0][1] = TicTacToeGame.obj.getRecs().get(3);	// Reihe Numero Dos
-		rechtecke[1][1] = TicTacToeGame.obj.getRecs().get(4);
-		rechtecke[2][1] = TicTacToeGame.obj.getRecs().get(5);
-		
-		rechtecke[0][2] = TicTacToeGame.obj.getRecs().get(6);	// Reihe Numero Trés
-		rechtecke[1][2] = TicTacToeGame.obj.getRecs().get(7);
-		rechtecke[2][2] = TicTacToeGame.obj.getRecs().get(8);
+	public void getCurrentValues(FieldValue[][] condition) {
+		this.setRechteckArray();
 		// erste Reihe befuellen:
 		condition[0][0] = rechtecke[0][0].getValue();
 		condition[1][0] = rechtecke[1][0].getValue();
@@ -179,7 +199,9 @@ public class GamePanel extends JPanel implements MouseListener {
 		if(counter > 2) {
 			writeWinningLine();
 			return 1;
-		} else resetCacheField();
+		} else { 
+			resetCacheField();
+		}
 		counter = 0;
 		
 		for(int i=0; i<3; i++) {
@@ -191,11 +213,12 @@ public class GamePanel extends JPanel implements MouseListener {
 		if(counter > 2) {
 			writeWinningLine();
 			return -1;
-		} else resetCacheField();
+		} else { 
+			resetCacheField();
+		}
 		counter = 0;
 		
-		
-		
+		// check for other cross:
 		for(int i=0; i<3; i++) {
 			if(condition[i][2-i] == FieldValue.O) {
 				counter++;
@@ -205,8 +228,10 @@ public class GamePanel extends JPanel implements MouseListener {
 		if(counter > 2) {
 			writeWinningLine();
 			return -1;
-		} else resetCacheField();
-		
+		} else {
+			resetCacheField();
+		}
+		counter = 0;
 		for(int i=0; i<3; i++) {
 			if(condition[i][2-i] == FieldValue.X) {
 				counter++;
@@ -216,8 +241,9 @@ public class GamePanel extends JPanel implements MouseListener {
 		if(counter > 2) {
 			writeWinningLine();
 			return 1;
-		} else resetCacheField();
-		
+		} else {
+			resetCacheField();
+		}
 		return 0;
 	}
 	

@@ -11,28 +11,32 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+@SuppressWarnings("serial")
 public class WinningInfo extends JDialog {
 	
 	private JButton ok;
 	private JButton nochmal;
 	private JLabel schriftzug;
 	private String spieler;
-	private Boolean playAgain;
+	private boolean playAgain;
+	private boolean fieldFull;
 	
-	public WinningInfo(String info) {
+	public WinningInfo(String info, boolean fieldFull) {
 		super();					// Aufrufen des Konstruktors der Vaterklasse
+		this.fieldFull = fieldFull;
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-		setSize(400, 150);						// BREITE, HOEHE
+		setSize(600, 200);						// BREITE, HOEHE
 		this.spieler = info;
 		setLayout(new BorderLayout());
 		setLocationRelativeTo(null);
+		this.setResizable(false);
 		this.setTitle("Spiel vorbei!");
 		initComponents();
 		playAgain = false;
 		// Adding all components:
 		setBackground(Color.GRAY);
-		add(schriftzug,BorderLayout.NORTH);
-		add(ok,BorderLayout.SOUTH);
+		add(schriftzug, BorderLayout.NORTH);
+		add(ok, BorderLayout.SOUTH);
 		add(nochmal);
 		setModal(true);
 		setVisible(true);
@@ -43,9 +47,14 @@ public class WinningInfo extends JDialog {
 		nochmal = new JButton("Nochmal spielen!");
 		ok.setFont(new java.awt.Font("Arial", Font.ITALIC, 20));
 		nochmal.setFont(new java.awt.Font("Arial", Font.ITALIC, 20));
-		schriftzug = new JLabel("   Spieler " + spieler + " hat gewonnen!", SwingConstants.CENTER);
+		if(!fieldFull) {
+			schriftzug = new JLabel("   Spieler " + spieler + " hat gewonnen!", SwingConstants.CENTER);
+			schriftzug.setFont(new java.awt.Font("Arial", Font.ITALIC, 30));
+		} else {
+			schriftzug = new JLabel(" " + spieler, SwingConstants.CENTER);
+			schriftzug.setFont(new java.awt.Font("Arial", Font.ITALIC, 20));
+		}
 		schriftzug.setSize(100, 50);
-		schriftzug.setFont(new java.awt.Font("Arial", Font.ITALIC, 30));
 		ok.addActionListener(new ActionListener() {
 			
             public void actionPerformed(ActionEvent e) {
@@ -71,5 +80,4 @@ public class WinningInfo extends JDialog {
 	public void setPlayAgain(Boolean playAgain) {
 		this.playAgain = playAgain;
 	}
-
 }
